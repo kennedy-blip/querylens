@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#070a12"><meta name="description" content="QueryLens SQL query plan analyzer and SQLite index advisor.">
+  <title>QueryLens — SQL Plan & Index Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<div class="shell">
+  <header class="topbar">
+    <a class="brand" href="/"><span class="brand-mark">Q</span><span>Query<span class="cyan">Lens</span><small>SQL PLAN & INDEX STUDIO</small></span></a>
+    <div class="engine"><span class="pulse"></span><span id="engineStatus">Connecting to SQLite engine…</span></div>
+    <div class="top-actions"><span class="index-pill"><span id="indexCount">0</span> INDEXES</span><button class="btn ghost" id="resetBtn">Reset indexes</button></div>
+  </header>
+  <main>
+    <section class="hero"><div><div class="eyebrow">QUERY PERFORMANCE WORKBENCH <span>● LIVE BENCHMARK</span></div><h1>See what your SQL <em>really does.</em></h1><p>Inspect execution plans, isolate bottlenecks, and test index strategies against a seeded SQLite dataset.</p></div><div class="hero-stat"><strong id="rowCount">15,500+</strong><span>BENCHMARK ROWS</span></div></section>
+    <section class="workspace">
+      <aside class="panel presets"><div class="panel-head"><div><span class="eyebrow">WORKSPACE</span><h2>Slow query presets</h2></div><span class="tiny-count">03</span></div><div id="presetList" class="preset-list"><div class="muted">Loading query presets…</div></div><div class="side-note"><span class="cyan">✳</span><div><b>Tip</b><p>Start with an unindexed query, then compare its plan after applying the advisor's suggested index.</p></div></div></aside>
+      <section class="main-column">
+        <div class="panel editor-panel"><div class="panel-head"><div><span class="eyebrow">SQL EDITOR</span><h2>Benchmark runner</h2></div><span class="language-tag">SQLITE / SQL</span></div>
+          <textarea id="sqlEditor" spellcheck="false" aria-label="SQL query editor">SELECT transaction_id, merchant_id, amount, status, transaction_date
+FROM mpesa_transactions
+WHERE merchant_id = 42 AND transaction_date >= '2025-06-01T00:00:00'
+ORDER BY transaction_date DESC
+LIMIT 100;</textarea>
+          <div class="editor-footer"><span><kbd>CTRL</kbd> + <kbd>ENTER</kbd> TO RUN</span><div class="run-actions"><label class="toggle-label"><input id="compareToggle" type="checkbox" checked><span class="toggle"></span> Compare suggested index</label><button id="runBtn" class="btn primary"><span>▶</span> Run EXPLAIN & Benchmark</button></div></div>
+          <div id="errorBox" class="error-box hidden" role="alert"></div>
+        </div>
+        <div id="results" class="results hidden">
+          <div class="metrics-grid" id="metrics"></div>
+          <div class="panel plan-panel"><div class="panel-head"><div><span class="eyebrow">QUERY PLAN</span><h2>Execution plan & bottlenecks</h2></div><span class="plan-legend"><i class="rose-dot"></i> SCAN <i class="green-dot"></i> INDEXED</span></div><div id="planTree" class="plan-tree"></div></div>
+          <div class="panel advisor-panel"><div class="panel-head"><div><span class="eyebrow">INDEX ADVISOR</span><h2>Optimization opportunities</h2></div><span class="advisor-tag">AI-STYLE HEURISTICS</span></div><div id="adviceList"></div></div>
+          <div class="panel"><div class="panel-head"><div><span class="eyebrow">RESULT PREVIEW</span><h2>Sample rows</h2></div><span class="muted" id="sampleMeta"></span></div><div class="table-wrap"><table id="sampleTable"></table></div></div>
+        </div>
+      </section>
+    </section>
+    <section class="panel schema-panel"><div class="panel-head"><div><span class="eyebrow">DATABASE INTROSPECTION</span><h2>Schema explorer</h2></div><span class="muted">IN-MEMORY SQLITE BENCHMARK</span></div><div id="schemaGrid" class="schema-grid"><div class="muted">Loading schema…</div></div></section>
+  </main>
+  <footer><span>QUERYLENS <b>●</b> BUILT FOR QUERY CLARITY</span><span>Read-only SQL · SQLite query planner · Synthetic benchmark data</span></footer>
+</div>
+<script src="/app.js" defer></script>
+</body></html>
