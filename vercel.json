@@ -2,7 +2,11 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/*.py",
+      "src": "api/schema.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "api/explain.py",
       "use": "@vercel/python"
     },
     {
