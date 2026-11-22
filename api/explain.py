@@ -8,9 +8,9 @@ from _db import connect
 MAX_SQL = 12000
 FORBIDDEN = re.compile(r"\b(INSERT|UPDATE|DELETE|REPLACE|CREATE|DROP|ALTER|ATTACH|DETACH|VACUUM|PRAGMA|REINDEX|TRIGGER)\b", re.I)
 TABLE_COLUMNS = {
- "mpesa_transactions":{"merchant_id","status","transaction_date","amount","transaction_id"},
- "merchant_accounts":{"merchant_id","account_status","region","created_at"},
- "api_request_logs":{"merchant_id","response_code","created_at","endpoint","duration_ms"}
+ "mpesa_transactions":("merchant_id","status","transaction_date","amount","transaction_id"),
+ "merchant_accounts":("merchant_id","account_status","region","created_at"),
+ "api_request_logs":("merchant_id","response_code","created_at","endpoint","duration_ms")
 }
 
 def validate_sql(sql):
