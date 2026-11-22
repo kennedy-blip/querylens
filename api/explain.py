@@ -48,7 +48,7 @@ def run(db, sql):
     plan = [dict(id=r[0], parent=r[1], detail=r[3]) for r in db.execute("EXPLAIN QUERY PLAN " + sql)]
     started = time.perf_counter()
     cursor = db.execute(sql)
-    rows = cursor.fetchmany(501)
+    rows = cursor.fetchall()
     elapsed = (time.perf_counter() - started) * 1000
     returned = len(rows)
     scan_count = sum(1 for p in plan if "SCAN " in p["detail"].upper())
@@ -103,7 +103,10 @@ class handler(BaseHTTPRequestHandler):
             after=run(db,sql) if applied else None
             indexes=[]
             for table in TABLE_COLUMNS:
-                indexes.extend(dict(table=table,name=r[1],columns=r[2]) for r in db.execute(f"PRAGMA index_list({table})") for r in [r])
+                for index_row in db.execute(f"PRAGMA index_list({table})"):
+                    index_name = index_row[1]
+                    index_columns = [column[2] for column in db.execute(f"PRAGMA index_info({index_name})")]
+                    indexes.append(dict(table=table, name=index_name, columns=index_columns))
             db.close()
             speedup=round(before["executionMs"]/max(after["executionMs"],0.001),2) if after else None
             self._send(200,{"before":before,"after":after,"recommendations":advice,
